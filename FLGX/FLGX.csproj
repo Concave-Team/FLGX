@@ -5,7 +5,35 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>FLGX</Title>
+    <Version>1.0.1-beta</Version>
+    <Authors>xsneon</Authors>
+    <Company>Concave Studios</Company>
+    <Description>FLGX (Flexible Lightweight Graphics Library) is 
+a abstracted graphics library for creating complex graphics</Description>
+    <Copyright>Copyright, 2024, Concave Studios</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Concave-Team/FLGX</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Concave-Team/FLGX</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>graphics csharp net opengl directx vulkan library flgx FLGX bgfx raylib rendering renderer utilities gamedev game</PackageTags>
+    <PackageReleaseNotes>v1.0.0-beta: Released package on NuGet</PackageReleaseNotes>
+    <NeutralLanguage>en-001</NeutralLanguage>
+    <PackageIcon>FLGX.png</PackageIcon>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Downloads\FLGX.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="4.1.0" />

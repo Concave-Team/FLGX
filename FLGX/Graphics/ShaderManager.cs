@@ -1,11 +1,11 @@
-﻿using FLGX.Graphics.Common;
+﻿using flgx.Graphics.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FLGX.Graphics
+namespace flgx.Graphics
 {
     public static class ShaderManager
     {

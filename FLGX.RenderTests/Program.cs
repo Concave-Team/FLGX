@@ -1,12 +1,12 @@
-﻿using FLGX;
+﻿using flgx;
 using FLUX;
-using FLGX.Internal;
-using FLGX.Graphics.Common;
+using flgx.Internal;
+using flgx.Graphics.Common;
 using FLUX.Graphics;
 using Matrix4x4 = System.Numerics.Matrix4x4;
-using FLGX.Graphics.Common.Models;
+using flgx.Graphics.Common.Models;
 
-namespace FLGX.RenderTests
+namespace flgx.RenderTests
 {
     internal class Program
     {
@@ -31,7 +31,7 @@ namespace FLGX.RenderTests
 
             FLGX.MakeWindowCurrent(window);
 
-            FLModel model = FLModel.FromFile("meshes/cube.obj");
+            FLModel model = FLModel.FromFile("meshes/Test.obj");
 
             var defaultShaders = FLGX.BuildDefaultShaders(true);
 

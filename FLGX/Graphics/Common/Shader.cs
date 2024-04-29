@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 
-namespace FLGX.Graphics.Common
+namespace flgx.Graphics.Common
 {
     public abstract class Shader
     {

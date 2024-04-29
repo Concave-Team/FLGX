@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FLGX.Graphics.Common
+namespace flgx.Graphics.Common
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct FLVertex

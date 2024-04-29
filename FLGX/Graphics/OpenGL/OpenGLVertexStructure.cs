@@ -1,4 +1,4 @@
-﻿using FLGX.Graphics.Common;
+﻿using flgx.Graphics.Common;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FLGX.Graphics.OpenGL
+namespace flgx.Graphics.OpenGL
 {
     public class OpenGLVertexStructure : VertexStructure
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FLGX.Internal
+namespace flgx.Internal
 {
     public class FLGXInternalState
     {

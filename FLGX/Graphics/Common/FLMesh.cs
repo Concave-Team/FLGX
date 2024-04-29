@@ -4,8 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using flgx.Graphics.Common;
 
-namespace FLGX.Graphics.Common
+namespace flgx.Graphics.Common
 {
     public class FLMesh
     {

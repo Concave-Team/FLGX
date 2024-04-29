@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Assimp;
 using Assimp.Configs;
 
-namespace FLGX.Graphics.Common.Models
+namespace flgx.Graphics.Common.Models
 {
     public class FLModel
     {
@@ -42,9 +42,9 @@ namespace FLGX.Graphics.Common.Models
                     Vector3D vertex = vertices[i];
                     Vector3D normal = normals[i];
                     Console.WriteLine(normal.ToSNV2());
-                    System.Numerics.Vector2 texcoord = new System.Numerics.Vector2(texcoords[i].X, texcoords[i].Y);
+                    //System.Numerics.Vector2 texcoord = new System.Numerics.Vector2(texcoords[i].X, texcoords[i].Y);
 
-                    Vertices.Add(new FLVertex(vertex.ToSNV2(), normal.ToSNV2(), texcoord));
+                    Vertices.Add(new FLVertex(vertex.ToSNV2(), normal.ToSNV2(), new System.Numerics.Vector2(0,0)));
                 }
 
                 model.VtxStruct.Bind();

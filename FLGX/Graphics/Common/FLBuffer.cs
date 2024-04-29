@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FLGX.Graphics.Common
+namespace flgx.Graphics.Common
 {
     public abstract class FLBuffer
     {

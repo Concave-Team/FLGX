@@ -1,7 +1,7 @@
-﻿using FLGX.Graphics;
-using FLGX.Graphics.Common;
-using FLGX.Graphics.OpenGL;
-using FLGX.Internal;
+﻿using flgx.Graphics;
+using flgx.Graphics.Common;
+using flgx.Graphics.OpenGL;
+using flgx.Internal;
 using OpenTK.Graphics.OpenGL;
 using Serilog;
 using Serilog.Core;
@@ -9,7 +9,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace FLGX
+namespace flgx
 {
     public static class FLGX
     {

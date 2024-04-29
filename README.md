@@ -1,4 +1,6 @@
 # FLGX - Flexible Lightweight Graphics Library
+[![NuGet Badge](https://buildstats.info/nuget/FLGX?includePreReleases=true)](https://www.nuget.org/packages/FLGX/1.0.1-beta)
+[![NuGet Badge](https://buildstats.info/nuget/FLUXUtils?includePreReleases=true)](https://www.nuget.org/packages/FLUXUtils/1.0.0)
 
 <b>FLGX</b>(Flexible Lightweight Graphics Library) is an open-source C#(.NET) graphics rendering library meant to streamline graphics programming and let you work more on your games rather than spend tons of time on graphics!
 FLGX is licensed under MIT, so you don't have to worry about licensing or anything! Just download and use!
@@ -28,11 +30,12 @@ FLUX will be able to be used standalone as well, as it doesn't actually depend o
 
 # How To Get
 
-Currently to get FLGX, the only way is to build it for yourself. However, don't worry - it's really simple!
+To use FLGX in your project you can install it through NuGet or build it for yourself, which is also very simple!
 All you need to do is to clone this repository and include the FLGX project file in your project's solution.
 From there - add a project reference to it, and you can start using FLGX!
 
-Though, soon we will create a NuGet package to make this process even easier!
+As for the NuGet release, just open up your NuGet package manager console and use: Install-Package FLGX
+For FLUX you can do Install-Package FLUXUtils
 
 # How To Use
 
@@ -41,8 +44,7 @@ FLGX is designed to provide a rather low-level experience to graphics programmin
 
 This is how a basic program to render a triangle looks like in FLGX:
 
-<code>
-    FLGX.Init(new FLGXInitSettings(RenderingAPI.OpenGL)); // Initialize the FLGX library with your selected RenderingAPI(currently only OpenGL is supported.)
+<code>FLGX.Init(new FLGXInitSettings(RenderingAPI.OpenGL)); // Initialize the FLGX library with your selected RenderingAPI(currently only OpenGL is supported.)
 
     var window = FLGX.CreateWindow("Triangle Example", 1300, 900); // Create an FLGX window with your selected title and size.
 
@@ -86,8 +88,7 @@ This is how a basic program to render a triangle looks like in FLGX:
     );
 
     vertexStructure.Destroy(); // Make sure to destroy your vertex structure after.
-    FLGX.Shutdown(); // Lastly, shutdown FLGX. This deinitializes the library, and destroys any unfreed buffers, windows and shaders.
-</code>
+    FLGX.Shutdown(); // Lastly, shutdown FLGX. This deinitializes the library, and destroys any unfreed buffers, windows and shaders.</code>
 
 # Acknowledgements
 

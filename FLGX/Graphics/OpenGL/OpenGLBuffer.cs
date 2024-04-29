@@ -1,4 +1,4 @@
-﻿using FLGX.Graphics.Common;
+﻿using flgx.Graphics.Common;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace FLGX.Graphics.OpenGL
+namespace flgx.Graphics.OpenGL
 {
     public class OpenGLBuffer : FLBuffer
     {

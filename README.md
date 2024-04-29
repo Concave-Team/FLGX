@@ -44,7 +44,9 @@ FLGX is designed to provide a rather low-level experience to graphics programmin
 
 This is how a basic program to render a triangle looks like in FLGX:
 
-<code>FLGX.Init(new FLGXInitSettings(RenderingAPI.OpenGL)); // Initialize the FLGX library with your selected RenderingAPI(currently only OpenGL is supported.)
+<code>
+
+    FLGX.Init(new FLGXInitSettings(RenderingAPI.OpenGL)); // Initialize the FLGX library with your selected RenderingAPI(currently only OpenGL is supported.)
 
     var window = FLGX.CreateWindow("Triangle Example", 1300, 900); // Create an FLGX window with your selected title and size.
 

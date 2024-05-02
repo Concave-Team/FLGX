@@ -22,6 +22,12 @@ namespace flgx.Graphics.Common.Models
             }
         }
 
+        public void Destroy()
+        {
+            Meshes.Clear();
+            VtxStruct.Destroy();
+        }
+
         public static FLModel FromFile(string file)
         {
             var importer = new AssimpContext();
@@ -41,10 +47,9 @@ namespace flgx.Graphics.Common.Models
                 {
                     Vector3D vertex = vertices[i];
                     Vector3D normal = normals[i];
-                    Console.WriteLine(normal.ToSNV2());
-                    //System.Numerics.Vector2 texcoord = new System.Numerics.Vector2(texcoords[i].X, texcoords[i].Y);
+                    System.Numerics.Vector2 texcoord = new System.Numerics.Vector2(texcoords[i].X, texcoords[i].Y);
 
-                    Vertices.Add(new FLVertex(vertex.ToSNV2(), normal.ToSNV2(), new System.Numerics.Vector2(0,0)));
+                    Vertices.Add(new FLVertex(vertex.ToSNV2(), normal.ToSNV2(), texcoord));
                 }
 
                 model.VtxStruct.Bind();

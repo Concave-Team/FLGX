@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace flgx
 {
     public class FLGXWindow : GameWindow
@@ -38,7 +37,7 @@ namespace flgx
         {
             Size = new OpenTK.Mathematics.Vector2i(width, height);
             Title = title;
-            VSync = VSyncMode.Adaptive;
+            VSync = VSyncMode.Off;
         }
     }
 }

@@ -200,6 +200,62 @@ namespace flgx
         }
 
         /// <summary>
+        /// Creates an empty texture.
+        /// </summary>
+        /// <returns>An empty texture</returns>
+        /// <exception cref="FLGXInternalStateException"></exception>
+        public static FLTexture CreateTexture()
+        {
+            switch(InternalState.RenderingAPI)
+            {
+                case RenderingAPI.OpenGL:
+                    return new OpenGLTexture();
+                    break;
+                default:
+                    throw new FLGXInternalStateException(InternalState, "This rendering API does not support textures yet.");
+            }
+        }
+
+        /// <summary>
+        /// Creates a texture based on an image at a certain path
+        /// </summary>
+        /// <param name="path">The path to the image</param>
+        /// <param name="mipmaps">Whether or not to generate mipmaps (if the rendering API supports them)</param>
+        /// <returns>A texture</returns>
+        /// <exception cref="FLGXInternalStateException"></exception>
+        public static FLTexture CreateTexture(string path, bool mipmaps = true)
+        {
+            switch (InternalState.RenderingAPI)
+            {
+                case RenderingAPI.OpenGL:
+                    return new OpenGLTexture(path, mipmaps);
+                    break;
+                default:
+                    throw new FLGXInternalStateException(InternalState, "This rendering API does not support textures yet.");
+            }
+        }
+
+        /// <summary>
+        /// Creates a framebuffer based on your size inputs.
+        /// </summary>
+        /// <param name="width">The width of the framebuffer</param>
+        /// <param name="height">The height of the framebuffer</param>
+        /// <returns>A framebuffer</returns>
+        /// <exception cref="FLGXInternalStateException"></exception>
+        public static FLFrameBuffer CreateFramebuffer(int width, int height)
+        {
+            switch (InternalState.RenderingAPI)
+            {
+                case RenderingAPI.OpenGL:
+                    var oglFb = new OpenGLFrameBuffer();
+                    oglFb.AttachAttachments(width, height);
+                    return oglFb;
+                default:
+                    throw new FLGXInternalStateException(InternalState, "This rendering API does not support framebuffers yet.");
+            }
+        }
+
+        /// <summary>
         /// Creates a shader based on GLSL vertex and fragment shader file paths. (Only on the OpenGL rendering API/backend)
         /// </summary>
         /// <param name="vsPath">The file path to the vertex shader</param>
@@ -244,15 +300,18 @@ namespace flgx
             shader.Use();
         }
 
-        public static Shader BuildDefaultShaders(bool _3D = false)
+        public static Shader BuildDefaultShaders(bool _3D = false, bool OFS = false)
         {
             switch(InternalState.RenderingAPI)
             {
                 case RenderingAPI.OpenGL:
-                    if(_3D == false)
-                        return CreateGLSLShaderFromMemory(DefaultShaders.DefaultGLSLShaders_VS, DefaultShaders.DefaultGLSLShaders_FS);
-                    else
+                    if(_3D == true)
                         return CreateGLSLShaderFromMemory(DefaultShaders.DefaultGLSLShaders3D_VS, DefaultShaders.DefaultGLSLShaders3D_FS);
+                    else if(OFS == true)
+                        return CreateGLSLShaderFromMemory(DefaultShaders.DefaultGLSLShadersOSR_VS, DefaultShaders.DefaultGLSLShadersOSR_FS);
+                    else
+                        return CreateGLSLShaderFromMemory(DefaultShaders.DefaultGLSLShaders_VS, DefaultShaders.DefaultGLSLShaders_FS);
+
             }
 
             throw new FLGXInternalStateException(InternalState, "Cannot create default shaders for this API, as it is not supported.");
@@ -284,6 +343,24 @@ namespace flgx
                     case RenderingAPI.OpenGL:
                         GL.Enable(EnableCap.DepthTest);
                         GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
+                        break;
+                }
+            }
+        }
+
+        public static void NewFrameWODB()
+        {
+            var currentWindow = FLGXWindowManager.ActiveWindow;
+
+            if (currentWindow != null)
+            {
+                currentWindow.ProcessEvents(0);
+
+                switch (InternalState.RenderingAPI)
+                {
+                    case RenderingAPI.OpenGL:
+                        GL.Disable(EnableCap.DepthTest);
+                        GL.Clear(ClearBufferMask.ColorBufferBit);
                         break;
                 }
             }

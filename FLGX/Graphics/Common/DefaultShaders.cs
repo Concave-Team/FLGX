@@ -59,7 +59,7 @@ namespace flgx.Graphics.Common
                 out vec2 texCoord;
                 void main()
                 {
-                    gl_Position = Projection * View * Model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+                    gl_Position = Projection * View * Model * vec4(aPos.x, aPos.y+(gl_InstanceID*2.3), aPos.z, 1.0);
                     texCoord = aTexCoord;
                 }
             ";

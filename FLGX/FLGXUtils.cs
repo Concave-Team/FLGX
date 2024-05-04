@@ -24,6 +24,9 @@ namespace flgx
             return new OpenTK.Mathematics.Vector2(v.X, v.Y);
         }
 
+        public static Vector4 NormalizeColor(Vector4 color)
+            => new Vector4(color.X / 255, color.Y / 255, color.Z / 255, color.W / 255);
+
         public static Matrix4 ToOTKMat4(this System.Numerics.Matrix4x4 source)
         {
             return new Matrix4(

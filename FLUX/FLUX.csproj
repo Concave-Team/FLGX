@@ -4,7 +4,29 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>FLUXUtils</Title>
+    <Version>1.1</Version>
+    <Company>Concave Studios</Company>
+    <Authors>xsneon</Authors>
+    <Description>FLUX - Flexible Lightweight Utilities Library
+| A library created for game developers by game developers</Description>
+    <Copyright>Copyright, 2024 Concave Studios</Copyright>
+    <PackageProjectUrl>https://github.com/Concave-Team/FLGX</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Concave-Team/FLGX</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags> utilities flgx graphics library opengl directx vulkan csharp net utils flux game gamedev</PackageTags>
+    <PackageReleaseNotes>[v1.1]: Added ECS, UniqueList&lt;T&gt;</PackageReleaseNotes>
+    <PackageId>FLUXUtils</PackageId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.JSON" Version="13.0.3" />

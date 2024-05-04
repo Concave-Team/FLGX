@@ -37,7 +37,10 @@ namespace flgx
         {
             Size = new OpenTK.Mathematics.Vector2i(width, height);
             Title = title;
-            VSync = VSyncMode.Off;
+            if (vSync)
+                VSync = VSyncMode.Off;
+            else
+                VSync = VSyncMode.Adaptive;
         }
     }
 }

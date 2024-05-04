@@ -24,6 +24,11 @@ namespace flgx.Graphics.Common
             FLGX.DrawIndexed(VertexBuffer, IndexBuffer, Indices.Length);
         }
 
+        public void DrawInstances(int count)
+        {
+            FLGX.DrawInstanced(VertexBuffer, IndexBuffer, Indices.Length, count);
+        }
+
         // No need for a destroy function, since all buffers get destroyed anyway.
 
         /// <summary>

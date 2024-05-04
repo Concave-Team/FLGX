@@ -269,6 +269,9 @@ namespace flgx
                 var vsCode = File.ReadAllText(vsPath);
                 var fsCode = File.ReadAllText(fsPath);
 
+                Console.WriteLine(vsCode);
+                Console.WriteLine(fsCode);
+
                 Shader shader = new OpenGLShader(vsCode, fsCode);
 
                 return shader;
@@ -374,7 +377,23 @@ namespace flgx
             switch(InternalState.RenderingAPI)
             {
                 case RenderingAPI.OpenGL:
-                    GL.DrawElements(BeginMode.Triangles, indiceCount, DrawElementsType.UnsignedInt, 0);
+                    GL.DrawElements(PrimitiveType.Triangles, indiceCount, DrawElementsType.UnsignedInt, 0);
+                    GL.BindVertexArray(0);
+                    return;
+            }
+
+            throw new FLGXInternalStateException(InternalState, "This rendering API does not support indexed drawing.");
+        }
+
+        public static void DrawInstanced(FLBuffer VertexBuffer, FLBuffer IndexBuffer, int indiceCount, int instanceCount = 1)
+        {
+            VertexBuffer.Bind();
+            IndexBuffer.Bind();
+
+            switch (InternalState.RenderingAPI)
+            {
+                case RenderingAPI.OpenGL:
+                    GL.DrawElementsInstanced(PrimitiveType.Triangles, indiceCount, DrawElementsType.UnsignedInt, 0, instanceCount);
                     GL.BindVertexArray(0);
                     return;
             }

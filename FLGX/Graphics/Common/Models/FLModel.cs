@@ -22,6 +22,15 @@ namespace flgx.Graphics.Common.Models
             }
         }
 
+        public void DrawInstances(int count)
+        {
+            foreach (FLMesh mesh in Meshes)
+            {
+                VtxStruct.Bind();
+                mesh.DrawInstances(count);
+            }
+        }
+
         public void Destroy()
         {
             Meshes.Clear();

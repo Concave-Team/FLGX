@@ -13,8 +13,11 @@ namespace flgx.Graphics.Common
         public bool ContainsData = false;
 
         internal abstract void INT_GX_CreateBuffer();
-        public abstract void Bind();
+        public virtual void Bind() { }
+        public virtual void Bind(uint strides = 0, uint offsets = 0) { }
         public abstract void SetBufferData<T>(T[] data, int size) where T : struct;
+        public virtual void SetBufferData<T>(T data, int size) where T : struct { }
+        public virtual void SetEmptyData<T>() where T : struct { }
         public abstract void DestroyBuffer();
 
         public FLBuffer(BufferType type)
@@ -30,6 +33,7 @@ namespace flgx.Graphics.Common
     public enum BufferType
     {
         Vertex,
-        Index
+        Index,
+        Constant
     }
 }

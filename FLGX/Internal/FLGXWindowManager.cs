@@ -9,23 +9,23 @@ namespace flgx.Internal
 {
     public static class FLGXWindowManager
     {
-        internal static Dictionary<int, FLGXWindow> Windows = new Dictionary<int, FLGXWindow>();
-        public static FLGXWindow ActiveWindow { get; private set; }
+        internal static Dictionary<int, IFLGXWindow> Windows = new Dictionary<int, IFLGXWindow>();
+        public static IFLGXWindow ActiveWindow { get; private set; }
 
-        private static FLGXWindow ClosingWindow;
+        private static IFLGXWindow ClosingWindow;
 
-        public static FLGXWindow RegisterNewWindow(FLGXWindow window)
+        public static IFLGXWindow RegisterNewWindow(IFLGXWindow window)
         {
             window.WindowId = Windows.Count + 1;
-            window.Closing += (CancelEventArgs e) => { ClosingWindow = window; HandleWindowClosing(); };
+            window.OnClosing = () => { ClosingWindow = window; HandleWindowClosing(); };
             Windows.Add(Windows.Count + 1, window);
             return GetWindow(window.WindowId); // Return the one from the list.
         }
 
-        public static void SetAsCurrent(FLGXWindow window) 
+        public static void SetAsCurrent(IFLGXWindow window) 
         {
             ActiveWindow = window;
-            ActiveWindow.MakeCurrent();
+            ActiveWindow.MakeWindowCurrent();
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace flgx.Internal
         /// </summary>
         /// <param name="windowId">Id of the window</param>
         /// <returns>The window</returns>
-        public static FLGXWindow GetWindow(int windowId)
+        public static IFLGXWindow GetWindow(int windowId)
         {
             if(Windows.ContainsKey(windowId))
                 return Windows[windowId];
@@ -45,6 +45,7 @@ namespace flgx.Internal
             if(ClosingWindow != null)
             {
                 Windows.Remove(ClosingWindow.WindowId);
+                ClosingWindow = null;
             }
         }
 

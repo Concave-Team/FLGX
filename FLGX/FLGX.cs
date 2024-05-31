@@ -1,10 +1,14 @@
 ﻿using flgx.Graphics;
 using flgx.Graphics.Common;
+using flgx.Graphics.Direct3D;
 using flgx.Graphics.OpenGL;
 using flgx.Internal;
 using OpenTK.Graphics.OpenGL;
 using Serilog;
 using Serilog.Core;
+using Silk.NET.Core.Native;
+using Silk.NET.Direct3D11;
+using Silk.NET.DXGI;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -49,16 +53,22 @@ namespace flgx
         /// <param name="w">The width of the window (in pixels)</param>
         /// <param name="h">The height of the window (in pixels)</param>
         /// <returns>The constructed window.</returns>
-        public static FLGXWindow CreateWindow(string title, int w, int h)
+        public static IFLGXWindow CreateWindow(string title, int w, int h)
         {
-            return FLGXWindowManager.RegisterNewWindow(new FLGXWindow(w, h, title, true));
+            if (InternalState.RenderingAPI == RenderingAPI.Direct3D11)
+            {
+                var window = new FLGXSNWindow(new Vector2(w, h), title, false, false);
+                window.Initialize();
+                return FLGXWindowManager.RegisterNewWindow(window);
+            }
+            return FLGXWindowManager.RegisterNewWindow(new FLGXGLWindow(w, h, title, true));
         }
 
         /// <summary>
         /// Makes the window be the current active window for rendering. You must call this before rendering to a window.
         /// </summary>
         /// <param name="window">The window to make active.</param>
-        public static void MakeWindowCurrent(FLGXWindow window)
+        public static void MakeWindowCurrent(IFLGXWindow window)
         {
             FLGXWindowManager.SetAsCurrent(window);
         }
@@ -79,6 +89,10 @@ namespace flgx
             {
                 case RenderingAPI.OpenGL:
                     idxBuf = new OpenGLBuffer(BufferType.Index);
+                    idxBuf.SetBufferData(data, size);
+                    break;
+                case RenderingAPI.Direct3D11:
+                    idxBuf = new Direct3DBuffer(BufferType.Index);
                     idxBuf.SetBufferData(data, size);
                     break;
             }
@@ -109,6 +123,10 @@ namespace flgx
                     vtxBuf = new OpenGLBuffer(BufferType.Vertex);
                     vtxBuf.SetBufferData(data, size);
                     break;
+                case RenderingAPI.Direct3D11:
+                    vtxBuf = new Direct3DBuffer(BufferType.Vertex);
+                    vtxBuf.SetBufferData(data, size);
+                    break;
             }
 
             if (vtxBuf == null)
@@ -132,6 +150,9 @@ namespace flgx
             {
                 case RenderingAPI.OpenGL:
                     vtxBuf = new OpenGLBuffer(BufferType.Vertex);
+                    break;
+                case RenderingAPI.Direct3D11:
+                    vtxBuf = new Direct3DBuffer(BufferType.Vertex);
                     break;
             }
 
@@ -157,6 +178,9 @@ namespace flgx
                 case RenderingAPI.OpenGL:
                     idxBuf = new OpenGLBuffer(BufferType.Index);
                     break;
+                case RenderingAPI.Direct3D11:
+                    idxBuf = new Direct3DBuffer(BufferType.Index);
+                    break;
             }
 
             if (idxBuf == null)
@@ -168,7 +192,7 @@ namespace flgx
         }
 
         /// <summary>
-        /// Creates a vertex structure for use with buffers. Make sure to destroy it during shutdown, as FLGX will not do it automatically.
+        /// [Overload/OpenGL]: Creates a vertex structure for use with buffers. Make sure to destroy it during shutdown, as FLGX will not do it automatically.
         /// </summary>
         /// <returns>The vertex structure.</returns>
         /// <exception cref="FLGXInternalStateException"></exception>
@@ -183,6 +207,12 @@ namespace flgx
             throw new FLGXInternalStateException(InternalState, "Unsupported rendering API detected when trying to create vertex structure.");
         }
 
+        // TO-DO: Add VertexStructure creation overload with input descriptions.
+
+        /// <summary>
+        /// [Helper/OpenGL]: Sets the vertex attributes for the FLVertex structure. For Direct3D11 use FLGX.CreateFLVertexLayout()
+        /// </summary>
+        /// <param name="vertexStructure"></param>
         public static void SetFLVertexAttributes(VertexStructure vertexStructure)
         {
             int sizeOfFloat = sizeof(float);
@@ -200,6 +230,34 @@ namespace flgx
         }
 
         /// <summary>
+        /// Creates a vertex structure using the FLVertex structure <br></br>
+        /// Names: POSITION, NORMAL, TEXCOORD (D3D11) Layout Positions: 0, 1, 2 (OpenGL)
+        /// </summary>
+        /// <returns></returns>
+        public static VertexStructure CreateFLVertexStructure()
+        {
+            VertexStructure struc = null;
+
+            switch (InternalState.RenderingAPI)
+            {
+                case RenderingAPI.Direct3D11:
+                    struc = new Direct3DVertexStructure(
+                        new[] {
+                            new InputElement("POSITION", 0, Format.FormatR32G32B32Float, 0, 0, InputClassification.PerVertexData, 0),
+                            new InputElement("NORMAL", 0, Format.FormatR32G32B32Float, 0, 12, InputClassification.PerVertexData, 0),
+                            new InputElement("TEXCOORD", 0, Format.FormatR32G32Float, 0, 24, InputClassification.PerVertexData, 0)
+                        });
+                    return struc;
+                case RenderingAPI.OpenGL:
+                    struc = new OpenGLVertexStructure();
+                    FLGX.SetFLVertexAttributes(struc);
+                    return struc;
+            };
+
+            throw new FLGXInternalStateException(InternalState, "Could not create VertexStructure for this rendering API.");
+        }
+
+        /// <summary>
         /// Creates an empty texture.
         /// </summary>
         /// <returns>An empty texture</returns>
@@ -210,9 +268,8 @@ namespace flgx
             {
                 case RenderingAPI.OpenGL:
                     return new OpenGLTexture();
-                    break;
                 default:
-                    throw new FLGXInternalStateException(InternalState, "This rendering API does not support textures yet.");
+                    throw new FLGXInternalStateException(InternalState, "This rendering API does not support empty textures yet.");
             }
         }
 
@@ -229,7 +286,8 @@ namespace flgx
             {
                 case RenderingAPI.OpenGL:
                     return new OpenGLTexture(path, mipmaps);
-                    break;
+                case RenderingAPI.Direct3D11:
+                    return new Direct3DTexture(path, mipmaps);
                 default:
                     throw new FLGXInternalStateException(InternalState, "This rendering API does not support textures yet.");
             }
@@ -269,10 +327,28 @@ namespace flgx
                 var vsCode = File.ReadAllText(vsPath);
                 var fsCode = File.ReadAllText(fsPath);
 
-                Console.WriteLine(vsCode);
-                Console.WriteLine(fsCode);
-
                 Shader shader = new OpenGLShader(vsCode, fsCode);
+
+                return shader;
+            }
+            throw new FLGXInternalStateException(InternalState, "Cannot create GLSL shaders when not using the OpenGL rendering backend.");
+        }
+
+        /// <summary>
+        /// Creates a shader based on a HLSL shader path. Automatically sets as active shader on the internal state. (Only on the Direct3D11 rendering API/backend)
+        /// </summary>
+        /// <param name="vsPath">The file path to the vertex shader</param>
+        /// <param name="fsPath">The file path to the fragment shader</param>
+        /// <returns>A GLSL shader</returns>
+        /// <exception cref="FLGXInternalStateException"></exception>
+        public static Shader CreateHLSLShader(string shaderPath)
+        {
+            if (InternalState.RenderingAPI == RenderingAPI.Direct3D11)
+            {
+                var shCode = File.ReadAllText(shaderPath);
+
+                Shader shader = new Direct3DShader(shCode);
+                InternalState.SetStateVariable("ActiveShader", shader);
 
                 return shader;
             }
@@ -320,12 +396,17 @@ namespace flgx
             throw new FLGXInternalStateException(InternalState, "Cannot create default shaders for this API, as it is not supported.");
         }
 
+        public static Vector4 clearColor = new Vector4(0, 0, 0, 1);
+
         public static void ClearColor(Vector4 color)
         {
             switch (InternalState.RenderingAPI)
             {
                 case RenderingAPI.OpenGL:
                     GL.ClearColor(color.X, color.Y, color.Z, color.W);
+                    break;
+                case RenderingAPI.Direct3D11:
+                    clearColor = color;
                     break;
             }
         }
@@ -339,7 +420,7 @@ namespace flgx
 
             if (currentWindow != null)
             {
-                currentWindow.ProcessEvents(0);
+                currentWindow.DoEvents();
 
                 switch (InternalState.RenderingAPI)
                 {
@@ -347,17 +428,41 @@ namespace flgx
                         GL.Enable(EnableCap.DepthTest);
                         GL.Clear(ClearBufferMask.DepthBufferBit | ClearBufferMask.ColorBufferBit);
                         break;
+                    case RenderingAPI.Direct3D11:
+                        unsafe
+                        {
+                            var backgroundColour = new[] { clearColor.X, clearColor.Y, clearColor.Z, clearColor.W };
+                            using var framebuffer = InternalState.swapchain.GetBuffer<ID3D11Texture2D>(0);
+                            SilkMarshal.ThrowHResult(InternalState.device.CreateRenderTargetView(framebuffer, null, ref InternalState.renderTarget));
+
+                            InternalState.deviceContext.ClearRenderTargetView(InternalState.renderTarget, ref backgroundColour[0]);
+
+                            var snWindow = (FLGXSNWindow)currentWindow;
+
+                            var vwp = new Viewport(0, 0, snWindow.windowHandle.FramebufferSize.X, snWindow.windowHandle.FramebufferSize.Y, 0, 1);
+                            InternalState.deviceContext.RSSetViewports(1, in vwp);
+
+                            InternalState.deviceContext.OMSetRenderTargets(1, ref InternalState.renderTarget, ref Unsafe.NullRef<ID3D11DepthStencilView>());
+
+                            InternalState.deviceContext.IASetPrimitiveTopology(D3DPrimitiveTopology.D3D11PrimitiveTopologyTrianglelist);
+
+                            
+                            break;
+                        }
                 }
             }
         }
 
+        /// <summary>
+        /// [EXTRA/OpenGL]: Used to clear a frame without DepthTest and DepthBufferBit.
+        /// </summary>
         public static void NewFrameWODB()
         {
             var currentWindow = FLGXWindowManager.ActiveWindow;
 
             if (currentWindow != null)
             {
-                currentWindow.ProcessEvents(0);
+                currentWindow.DoEvents();
 
                 switch (InternalState.RenderingAPI)
                 {
@@ -369,16 +474,22 @@ namespace flgx
             }
         }
 
-        public static void DrawIndexed(FLBuffer VertexBuffer, FLBuffer IndexBuffer, int indiceCount)
+        public static void DrawIndexed(FLBuffer VertexBuffer, FLBuffer IndexBuffer, int indiceCount, uint strides = 0, uint offsets = 0)
         {
-            VertexBuffer.Bind();
-            IndexBuffer.Bind();
+            
 
             switch(InternalState.RenderingAPI)
             {
                 case RenderingAPI.OpenGL:
+                    VertexBuffer.Bind();
+                    IndexBuffer.Bind();
                     GL.DrawElements(PrimitiveType.Triangles, indiceCount, DrawElementsType.UnsignedInt, 0);
                     GL.BindVertexArray(0);
+                    return;
+                case RenderingAPI.Direct3D11:
+                    VertexBuffer.Bind(strides, offsets);
+                    IndexBuffer.Bind(0, 0);
+                    InternalState.deviceContext.DrawIndexed((uint)indiceCount, 0, 0);
                     return;
             }
 
@@ -411,6 +522,7 @@ namespace flgx
             if (currentWindow != null)
             {
                 currentWindow.SwapBuffers();
+                InternalState.renderTarget.Dispose();
             }
         }
 
@@ -424,11 +536,23 @@ namespace flgx
                 ShaderManager.DestroyAllShaders();
                 FLBufferManager.ClearBuffers();
                 FLGXWindowManager.KillAllWindows();
+
+                if(InternalState.RenderingAPI == RenderingAPI.Direct3D11)
+                {
+                    InternalState.factory.Dispose();
+                    InternalState.swapchain.Dispose();
+                    InternalState.device.Dispose();
+                    InternalState.deviceContext.Dispose();
+                    InternalState.compiler.Dispose();
+                    InternalState.d3d11.Dispose();
+                    InternalState.dxgi.Dispose();
+                }
+
                 await log.DisposeAsync();
             }
             else
             {
-                log.Warning("[FLGX]: Attempted to shutdown FGLX, even though it was not initialized.");
+                log.Warning("[FLGX]: Attempted to shutdown FLGX, even though it was not initialized.");
             }
         }
     }

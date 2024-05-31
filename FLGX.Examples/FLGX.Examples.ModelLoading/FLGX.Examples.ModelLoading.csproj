@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FLGX\FLGX\FLGX.csproj" />
-    <ProjectReference Include="..\..\FLGX\FLUX\FLUX.csproj" />
+    <ProjectReference Include="..\..\FLGX\FLGX.csproj" />
+    <ProjectReference Include="..\..\FLUX\FLUX.csproj" />
   </ItemGroup>
 
   <ItemGroup>

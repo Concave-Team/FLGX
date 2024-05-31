@@ -1,4 +1,9 @@
-﻿namespace flgx.Examples.BasicWindow
+﻿/*
+    Updated for FLGX v2.1.0 #
+ */
+
+
+namespace flgx.Examples.BasicWindow
 {
     internal class Program
     {

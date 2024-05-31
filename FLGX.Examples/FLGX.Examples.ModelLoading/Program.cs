@@ -1,4 +1,8 @@
-﻿using flgx.Graphics.Common;
+﻿/*
+    Updated for FLGX v2.1.0 #
+ */
+
+using flgx.Graphics.Common;
 using flgx.Graphics.Common.Models;
 using FLUX.Graphics;
 
@@ -21,7 +25,7 @@ namespace flgx.Examples.ModelLoading
 
             var _3DShaders = FLGX.BuildDefaultShaders(true);
 
-            Camera3D camera = new Camera3D(new System.Numerics.Vector3(0,0,15), new System.Numerics.Vector3(0,0,-1), System.Numerics.Quaternion.Zero, 0.5f, window.Size.ToSNV2()); // Create a FLUX Camera3D object.
+            Camera3D camera = new Camera3D(new System.Numerics.Vector3(0,0,15), new System.Numerics.Vector3(0,0,-1), System.Numerics.Quaternion.Zero, 0.5f, window.WindowSize); // Create a FLUX Camera3D object.
 
             FLGX.ClearColor(new System.Numerics.Vector4(0.2f, 0.1f, 0.3f, 1.0f));
             window.Run(

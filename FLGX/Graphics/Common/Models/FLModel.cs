@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Assimp;
 using Assimp.Configs;
+using flgx.Internal;
+using Silk.NET.Vulkan;
 
 namespace flgx.Graphics.Common.Models
 {
@@ -37,13 +39,22 @@ namespace flgx.Graphics.Common.Models
             VtxStruct.Destroy();
         }
 
+        public static FLModel FromPrimitiveData(int[] indices, FLVertex[] vertices)
+        {
+            var model = new FLModel();
+            model.VtxStruct = FLGX.CreateFLVertexStructure();
+            model.VtxStruct.Bind();
+            model.Meshes.Add(new FLMesh(indices, vertices));
+            return model;
+        }
+
         public static FLModel FromFile(string file)
         {
             var importer = new AssimpContext();
             var model = new FLModel();
-            var scene = importer.ImportFile(file, PostProcessSteps.Triangulate | PostProcessSteps.GenerateUVCoords | PostProcessSteps.GenerateNormals | PostProcessSteps.SortByPrimitiveType | PostProcessSteps.FlipUVs);
-
-            model.VtxStruct = FLGX.CreateVertexStructure();
+            var scene = FLGX.InternalState.RenderingAPI == RenderingAPI.OpenGL ? importer.ImportFile(file, PostProcessSteps.Triangulate | PostProcessSteps.GenerateUVCoords | PostProcessSteps.GenerateNormals | PostProcessSteps.SortByPrimitiveType | PostProcessSteps.FlipUVs) : 
+                importer.ImportFile(file, PostProcessSteps.Triangulate | PostProcessSteps.GenerateUVCoords | PostProcessSteps.MakeLeftHanded | PostProcessSteps.GenerateNormals | PostProcessSteps.SortByPrimitiveType);
+            model.VtxStruct = FLGX.CreateFLVertexStructure();
             foreach (var mesh in scene.Meshes)
             {
                 var vertices = mesh.Vertices; // Positions
@@ -63,7 +74,8 @@ namespace flgx.Graphics.Common.Models
 
                 model.VtxStruct.Bind();
                 FLMesh _mesh = new FLMesh(mesh.GetIndices(), Vertices.ToArray());
-                FLGX.SetFLVertexAttributes(model.VtxStruct);
+                if (FLGX.InternalState.RenderingAPI == RenderingAPI.OpenGL)
+                    FLGX.SetFLVertexAttributes(model.VtxStruct);
                 model.Meshes.Add(_mesh);
             }
 

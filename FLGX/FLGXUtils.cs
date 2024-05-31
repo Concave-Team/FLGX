@@ -51,5 +51,20 @@ namespace flgx
         {
             return new System.Numerics.Vector3(vec.X, vec.Y, vec.Z);
         }
+
+        public static Silk.NET.Maths.Vector2D<int> ToSilkInt(this System.Numerics.Vector2 vec)
+        {
+            return new Silk.NET.Maths.Vector2D<int>((int)vec.X, (int)vec.Y);
+        }
+
+        public static System.Numerics.Vector2 ToSilk2D(this Silk.NET.Maths.Vector2D<int> vec)
+        {
+            return new System.Numerics.Vector2(vec.X, vec.Y);
+        }
+
+        public static Silk.NET.Maths.Vector2D<float> ToSilkFloat(this System.Numerics.Vector2 vec)
+        {
+            return new Silk.NET.Maths.Vector2D<float>(vec.X, vec.Y);
+        }
     }
 }

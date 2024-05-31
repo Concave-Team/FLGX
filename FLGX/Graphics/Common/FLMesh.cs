@@ -21,7 +21,7 @@ namespace flgx.Graphics.Common
         /// </summary>
         public void Draw()
         {
-            FLGX.DrawIndexed(VertexBuffer, IndexBuffer, Indices.Length);
+            FLGX.DrawIndexed(VertexBuffer, IndexBuffer, Indices.Length, (uint)Marshal.SizeOf<FLVertex>());
         }
 
         public void DrawInstances(int count)
@@ -41,7 +41,7 @@ namespace flgx.Graphics.Common
             Indices = indices;
             Vertices = vertices;
 
-            VertexBuffer = FLGX.CreateVertexBuffer<FLVertex>(vertices, vertices.Length * Marshal.SizeOf<FLVertex>());
+            VertexBuffer = FLGX.CreateVertexBuffer<FLVertex>(Vertices, Vertices.Length * Marshal.SizeOf<FLVertex>());
             IndexBuffer = FLGX.CreateIndexBuffer<int>(Indices, Indices.Length * sizeof(int));
         }
     }

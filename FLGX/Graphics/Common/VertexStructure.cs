@@ -1,4 +1,5 @@
-﻿using System;
+﻿using flgx.Graphics.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace flgx.Graphics.Common
     public abstract class VertexStructure
     {
         internal abstract void INT_GX_CreateVStruct();
+        internal virtual void INT_GX_CreateVStruct(InputElement[] elements) { }
 
         public abstract void Bind();
         public abstract void AddAttribPointer(int index, int size, FLVertexAttribType type, bool normalized, int stride, int offset);
@@ -19,6 +21,11 @@ namespace flgx.Graphics.Common
         public VertexStructure()
         {
             INT_GX_CreateVStruct();
+        }
+
+        public VertexStructure(InputElement[] elements)
+        {
+            INT_GX_CreateVStruct(elements);
         }
     }
 

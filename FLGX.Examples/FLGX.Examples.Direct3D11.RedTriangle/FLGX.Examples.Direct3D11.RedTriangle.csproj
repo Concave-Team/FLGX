@@ -11,4 +11,10 @@
     <ProjectReference Include="..\..\FLGX\FLGX.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="shaders_triangle.hlsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

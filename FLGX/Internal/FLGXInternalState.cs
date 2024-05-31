@@ -4,6 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Silk.NET.Direct3D11;
+using Silk.NET.DXGI;
+using Silk.NET.Direct3D.Compilers;
+using Silk.NET.Core.Native;
 
 namespace flgx.Internal
 {
@@ -12,6 +16,16 @@ namespace flgx.Internal
         private Dictionary<string, object> StateVariables = new Dictionary<string, object>();
         public RenderingAPI RenderingAPI { get; set; }
 
+        public DXGI dxgi = null!;
+        public D3D11 d3d11 = null!;
+        public D3DCompiler compiler = null!;
+
+        public ComPtr<IDXGIFactory2> factory = default;
+        public ComPtr<IDXGISwapChain1> swapchain = default;
+        public ComPtr<ID3D11Device> device = default;
+        public ComPtr<ID3D11DeviceContext> deviceContext = default;
+        public ComPtr<ID3D11InputLayout> inputLayout = default;
+        public ComPtr<ID3D11RenderTargetView> renderTarget = default;
 
         public object GetStateVariable(string stateId)
         {

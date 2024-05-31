@@ -1,4 +1,8 @@
-﻿using flgx.Graphics.Common;
+﻿/*
+    Updated for FLGX v2.1.0 #
+ */
+
+using flgx.Graphics.Common;
 
 namespace flgx.Examples.RedTriangle
 {
@@ -12,24 +16,12 @@ namespace flgx.Examples.RedTriangle
 
             var window = FLGX.CreateWindow("Red Triangle", 1600, 900);
 
-            FLVertex[] vertices = new FLVertex[]
-            {
-                new FLVertex(new System.Numerics.Vector3(-1.0f, -1.0f, 0.0f)), // Bottom-left vertex
-                new FLVertex(new System.Numerics.Vector3(1.0f, -1.0f, 0.0f)),  // Bottom-right vertex
-                new FLVertex(new System.Numerics.Vector3(0.0f, 1.0f, 0.0f))    // Top vertex
-            };
-
-            int[] indices = new int[]
-            {
-                0, 1, 2
-            };
-
             FLGX.MakeWindowCurrent(window);
 
             VertexStructure vertexSpec = FLGX.CreateVertexStructure(); // Create a Vertex Structure(OpenGL equivalent to VAO) to describe how your vertices are structured.
 
             vertexSpec.Bind(); // Make sure to bind your vertex structure before creating a mesh.
-            FLMesh triangleMesh = new FLMesh(indices, vertices); // It is best to use an FLMesh when you can, since it handles the buffers for you.
+            FLMesh triangleMesh = new FLMesh(FLVertices.TriangleIndices, FLVertices.TriangleVertices); // It is best to use an FLMesh when you can, since it handles the buffers for you.
 
             FLGX.SetFLVertexAttributes(vertexSpec); // Since we are using FLVertex anyway, we can use this built-in function to set up the VertexStructure for us. (Use this function only after creating a mesh or buffer to avoid errors!)
 
